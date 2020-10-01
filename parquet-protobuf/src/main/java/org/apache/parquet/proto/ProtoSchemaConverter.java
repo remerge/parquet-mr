@@ -39,6 +39,8 @@ import static org.apache.parquet.schema.LogicalTypeAnnotation.enumType;
 import static org.apache.parquet.schema.LogicalTypeAnnotation.listType;
 import static org.apache.parquet.schema.LogicalTypeAnnotation.mapType;
 import static org.apache.parquet.schema.LogicalTypeAnnotation.stringType;
+import static org.apache.parquet.schema.LogicalTypeAnnotation.timestampType;
+import static org.apache.parquet.schema.LogicalTypeAnnotation.TimeUnit;
 import static org.apache.parquet.schema.PrimitiveType.PrimitiveTypeName.*;
 
 /**
@@ -97,6 +99,11 @@ public class ProtoSchemaConverter {
 
   private <T> Builder<? extends Builder<?, GroupBuilder<T>>, GroupBuilder<T>> addField(FieldDescriptor descriptor, final GroupBuilder<T> builder) {
     if (descriptor.getJavaType() == JavaType.MESSAGE) {
+      String name = descriptor.getMessageType().getFullName();
+      if (name.contains("google.protobuf.Timestamp") || name.equals("TestProto3.Timestamp")) {
+        ParquetType type = ParquetType.of(INT64);
+        return builder.primitive(type.primitiveType, getRepetition(descriptor)).as(timestampType(true, TimeUnit.MILLIS));
+      }
       return addMessageField(descriptor, builder);
     }
 

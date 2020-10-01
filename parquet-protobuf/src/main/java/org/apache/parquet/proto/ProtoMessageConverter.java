@@ -183,6 +183,10 @@ class ProtoMessageConverter extends GroupConverter {
       case LONG: return new ProtoLongConverter(pvc);
       case MESSAGE: {
         Message.Builder subBuilder = parentBuilder.newBuilderForField(fieldDescriptor);
+        String name = fieldDescriptor.getMessageType().getFullName();
+        if (name.contains("google.protobuf.Timestamp") || name.equals("TestProto3.Timestamp")) {
+          return new ProtoTimestampConverter(pvc, subBuilder);
+        }
         return new ProtoMessageConverter(conf, pvc, subBuilder, parquetType.asGroupType(), extraMetadata);
       }
     }
@@ -322,6 +326,28 @@ class ProtoMessageConverter extends GroupConverter {
       }
     }
 
+  }
+
+  final class ProtoTimestampConverter extends PrimitiveConverter {
+    final ParentValueContainer parent;
+    private final Message.Builder parentBuilder;
+
+    public ProtoTimestampConverter(ParentValueContainer parent,  Message.Builder parentBuilder) {
+      this.parent = parent;
+      this.parentBuilder = parentBuilder;
+    }
+
+    @Override
+    public void addLong(long value) {
+      try {
+        long seconds = value / 1000;
+        parentBuilder.getClass().getDeclaredMethod("setSeconds", long.class).invoke(parentBuilder, seconds);
+        parent.add(parentBuilder.getClass().getDeclaredMethod("build").invoke(parentBuilder));
+      }
+      catch (Throwable e) {
+        e.printStackTrace();
+      }
+    }
   }
 
   final class ProtoBinaryConverter extends PrimitiveConverter {
