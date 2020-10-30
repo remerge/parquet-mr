@@ -81,6 +81,7 @@ message SchemaConverterAllDatatypes {
         string someString = 20;
     }
     map<int64, SchemaConverterSimpleMessage> optionalMap = 21;
+    Timestamp timestamp = 22;
 }
 
 message SchemaConverterRepetition {
@@ -146,4 +147,12 @@ message FirstCustomClassMessage {
 
 message SecondCustomClassMessage {
     string string = 11;
+}
+
+message Timestamp {
+    int64 seconds = 1;
+}
+
+message TimestampTest {
+    Timestamp ts = 1;
 }

@@ -109,6 +109,7 @@ public class ProtoRecordConverterTest {
     data.setOptionalUInt32(1000 * 1000 * 8);
     data.setOptionalUInt64(1000L * 1000 * 1000 * 9);
     data.getOptionalMessageBuilder().setSomeId(1984);
+    data.getTimestampBuilder().setSeconds(1594370873);
 
     TestProto3.SchemaConverterAllDatatypes dataBuilt = data.build();
     data.clear();
@@ -136,6 +137,7 @@ public class ProtoRecordConverterTest {
     assertEquals(1000 * 1000 * 8, o.getOptionalUInt32());
     assertEquals(1000L * 1000 * 1000 * 9, o.getOptionalUInt64());
     assertEquals(1984, o.getOptionalMessage().getSomeId());
+    assertEquals(1594370873, o.getTimestamp().getSeconds());
   }
 
   @Test

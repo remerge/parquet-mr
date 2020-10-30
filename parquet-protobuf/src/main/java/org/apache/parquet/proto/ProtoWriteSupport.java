@@ -21,6 +21,7 @@ package org.apache.parquet.proto;
 import com.google.protobuf.*;
 import com.google.protobuf.Descriptors.Descriptor;
 import com.google.protobuf.Descriptors.FieldDescriptor;
+import com.google.protobuf.Descriptors.FieldDescriptor.JavaType;
 import com.twitter.elephantbird.util.Protobufs;
 import org.apache.hadoop.conf.Configuration;
 import org.apache.parquet.hadoop.BadConfigurationException;
@@ -229,7 +230,12 @@ public class ProtoWriteSupport<T extends MessageOrBuilder> extends WriteSupport<
     }
 
     private FieldWriter createWriter(FieldDescriptor fieldDescriptor, Type type) {
-
+      if (fieldDescriptor.getJavaType() == JavaType.MESSAGE) {
+        String name = fieldDescriptor.getMessageType().getFullName();
+        if (name.contains("google.protobuf.Timestamp") || name.contains("TestProto3.Timestamp")) {
+          return new TimestampWriter();
+        }
+      }
       switch (fieldDescriptor.getJavaType()) {
         case STRING: return new StringWriter() ;
         case MESSAGE: return createMessageWriter(fieldDescriptor, type);
@@ -456,6 +462,20 @@ public class ProtoWriteSupport<T extends MessageOrBuilder> extends WriteSupport<
     @Override
     final void writeRawValue(Object value) {
       recordConsumer.addLong((Long) value);
+    }
+  }
+
+  class TimestampWriter extends FieldWriter {
+
+    @Override
+    final void writeRawValue(Object value) {
+      Message msg = (Message) value;
+      final Descriptor descriptorForType = msg.getDescriptorForType();
+      final FieldDescriptor secDesc = descriptorForType.findFieldByName("seconds");
+
+      long millis = (long) msg.getField(secDesc) * 1000;
+
+      recordConsumer.addLong(millis);
     }
   }
 

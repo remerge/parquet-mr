@@ -114,6 +114,7 @@ public class ProtoSchemaConverterTest {
         "      }\n" +
         "    }\n" +
         "  }\n" +
+        "  optional int64 timestamp (TIMESTAMP(MILLIS,true)) = 22;\n" +
         "}";
 
     testConversion(TestProto3.SchemaConverterAllDatatypes.class, expectedSchema);
@@ -285,6 +286,16 @@ public class ProtoSchemaConverterTest {
         "}";
 
     testConversion(TestProto3.RepeatedInnerMessage.class, expectedSchema, false);
+  }
+
+  @Test
+  public void testProto3ConvertTimestamp() throws Exception {
+    String expectedSchema =
+      "message TestProto3.TimestampTest {\n" +
+        "  optional int64 ts (TIMESTAMP_MILLIS) = 1;\n" +
+        "}";
+
+    testConversion(TestProto3.TimestampTest.class, expectedSchema, false);
   }
 
   @Test
