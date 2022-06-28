@@ -18,10 +18,8 @@
  */
 package org.apache.parquet.proto;
 
-import com.google.protobuf.Descriptors;
 import com.google.protobuf.Message;
 import com.google.protobuf.MessageOrBuilder;
-import com.twitter.elephantbird.util.Protobufs;
 import org.apache.hadoop.fs.Path;
 import org.apache.parquet.hadoop.ParquetReader;
 
@@ -30,6 +28,7 @@ import java.io.IOException;
 import java.util.ArrayList;
 import java.util.List;
 
+import static org.junit.Assert.assertEquals;
 import static org.junit.Assert.fail;
 
 public class TestUtils {
@@ -78,26 +77,12 @@ public class TestUtils {
 
     checkSameBuilderInstance(messages);
 
+    List<MessageOrBuilder> input = cloneList(messages);
+
     List<MessageOrBuilder> output = writeAndRead(messages);
+
     List<Message> outputAsMessages = asMessages(output);
-    Descriptors.Descriptor messageDescriptor = Protobufs.getMessageDescriptor(asMessage(messages[0]).getClass());
-    Descriptors.FileDescriptor.Syntax syntax = messageDescriptor.getFile().getSyntax();
-    for (int i = 0 ; i < messages.length ; i++) {
-      if (Descriptors.FileDescriptor.Syntax.PROTO2.equals(syntax)) {
-        com.google.common.truth.extensions.proto.ProtoTruth.assertThat(outputAsMessages.get(i))
-          .ignoringRepeatedFieldOrder()
-          .reportingMismatchesOnly()
-          .isEqualTo(asMessage(messages[i]));
-      } else if (Descriptors.FileDescriptor.Syntax.PROTO3.equals(syntax)) {
-        // proto3 will return default values for absent fields which is what is returned in output
-        // this is why we can ignore absent fields here
-        com.google.common.truth.extensions.proto.ProtoTruth.assertThat(outputAsMessages.get(i))
-          .ignoringRepeatedFieldOrder()
-          .ignoringFieldAbsence()
-          .reportingMismatchesOnly()
-          .isEqualTo(asMessage(messages[i]));
-      }
-    }
+    assertEquals("The protocol buffers are not same:\n", asMessages(input), outputAsMessages);
     return (List<T>) outputAsMessages;
   }
 

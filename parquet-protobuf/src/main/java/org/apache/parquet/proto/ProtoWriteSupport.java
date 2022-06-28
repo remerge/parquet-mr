@@ -29,13 +29,17 @@ import org.apache.parquet.hadoop.api.WriteSupport;
 import org.apache.parquet.io.InvalidRecordException;
 import org.apache.parquet.io.api.Binary;
 import org.apache.parquet.io.api.RecordConsumer;
-import org.apache.parquet.schema.Type;
 import org.apache.parquet.schema.*;
+import org.apache.parquet.schema.Type;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
 import java.lang.reflect.Array;
-import java.util.*;
+import java.util.Collection;
+import java.util.HashMap;
+import java.util.List;
+import java.util.Map;
+import java.util.Optional;
 
 import static java.util.Optional.ofNullable;
 
@@ -190,13 +194,9 @@ public class ProtoWriteSupport<T extends MessageOrBuilder> extends WriteSupport<
 
     /** Used for writing nonrepeated (optional, required) fields*/
     void writeField(Object value) {
-      if (!(this instanceof ProtoWriteSupport.MapWriter)) {
-        recordConsumer.startField(fieldName, index);
-      }
+      recordConsumer.startField(fieldName, index);
       writeRawValue(value);
-      if (!(this instanceof ProtoWriteSupport.MapWriter)) {
-        recordConsumer.endField(fieldName, index);
-      }
+      recordConsumer.endField(fieldName, index);
     }
   }
 
@@ -320,36 +320,20 @@ public class ProtoWriteSupport<T extends MessageOrBuilder> extends WriteSupport<
     }
 
     private void writeAllFields(MessageOrBuilder pb) {
-      Descriptor messageDescriptor = pb.getDescriptorForType();
-      Descriptors.FileDescriptor.Syntax syntax = messageDescriptor.getFile().getSyntax();
+      //returns changed fields with values. Map is ordered by id.
+      Map<FieldDescriptor, Object> changedPbFields = pb.getAllFields();
 
-      if (Descriptors.FileDescriptor.Syntax.PROTO2.equals(syntax)) {
-        //returns changed fields with values. Map is ordered by id.
-        Map<FieldDescriptor, Object> changedPbFields = pb.getAllFields();
+      for (Map.Entry<FieldDescriptor, Object> entry : changedPbFields.entrySet()) {
+        FieldDescriptor fieldDescriptor = entry.getKey();
 
-        for (Map.Entry<FieldDescriptor, Object> entry : changedPbFields.entrySet()) {
-          FieldDescriptor fieldDescriptor = entry.getKey();
-
-          if(fieldDescriptor.isExtension()) {
-            // Field index of an extension field might overlap with a base field.
-            throw new UnsupportedOperationException(
-              "Cannot convert Protobuf message with extension field(s)");
-          }
-
-          int fieldIndex = fieldDescriptor.getIndex();
-          fieldWriters[fieldIndex].writeField(entry.getValue());
+        if(fieldDescriptor.isExtension()) {
+          // Field index of an extension field might overlap with a base field.
+          throw new UnsupportedOperationException(
+                  "Cannot convert Protobuf message with extension field(s)");
         }
-      } else if (Descriptors.FileDescriptor.Syntax.PROTO3.equals(syntax)) {
-        List<FieldDescriptor> fieldDescriptors = messageDescriptor.getFields();
-        for (FieldDescriptor fieldDescriptor : fieldDescriptors) {
-          FieldDescriptor.Type type = fieldDescriptor.getType();
-          if (!fieldDescriptor.isRepeated() && FieldDescriptor.Type.MESSAGE.equals(type) && !pb.hasField(fieldDescriptor)) {
-            continue;
-          }
-          int fieldIndex = fieldDescriptor.getIndex();
-          FieldWriter fieldWriter = fieldWriters[fieldIndex];
-          fieldWriter.writeField(pb.getField(fieldDescriptor));
-        }
+
+        int fieldIndex = fieldDescriptor.getIndex();
+        fieldWriters[fieldIndex].writeField(entry.getValue());
       }
     }
   }
@@ -368,13 +352,9 @@ public class ProtoWriteSupport<T extends MessageOrBuilder> extends WriteSupport<
 
     @Override
     final void writeField(Object value) {
-      List<?> list = (List<?>) value;
-      if (list.isEmpty()) {
-        return;
-      }
-
       recordConsumer.startField(fieldName, index);
       recordConsumer.startGroup();
+      List<?> list = (List<?>) value;
 
       recordConsumer.startField("list", 0); // This is the wrapper group for the array field
       for (Object listEntry: list) {
@@ -411,12 +391,8 @@ public class ProtoWriteSupport<T extends MessageOrBuilder> extends WriteSupport<
 
     @Override
     final void writeField(Object value) {
-      List<?> list = (List<?>) value;
-      if (list.isEmpty()) {
-        return;
-      }
-
       recordConsumer.startField(fieldName, index);
+      List<?> list = (List<?>) value;
 
       for (Object listEntry: list) {
         fieldWriter.writeRawValue(listEntry);
@@ -492,15 +468,10 @@ public class ProtoWriteSupport<T extends MessageOrBuilder> extends WriteSupport<
 
     @Override
     final void writeRawValue(Object value) {
-      Collection<Message> collection = (Collection<Message>) value;
-      if (collection.isEmpty()) {
-        return;
-      }
-      recordConsumer.startField(fieldName, index);
       recordConsumer.startGroup();
 
       recordConsumer.startField("key_value", 0); // This is the wrapper group for the map field
-      for (Message msg : collection) {
+      for (Message msg : (Collection<Message>) value) {
         recordConsumer.startGroup();
 
         final Descriptor descriptorForType = msg.getDescriptorForType();
@@ -516,7 +487,6 @@ public class ProtoWriteSupport<T extends MessageOrBuilder> extends WriteSupport<
       recordConsumer.endField("key_value", 0);
 
       recordConsumer.endGroup();
-      recordConsumer.endField(fieldName, index);
     }
   }
 
