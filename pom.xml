@@ -631,5 +631,18 @@
       </properties>
     </profile>
 
+    <profile>
+      <id>jitpack-build</id>
+      <activation>
+        <property>
+          <name>env.JITPACK</name>
+        </property>
+      </activation>
+      <properties>
+        <thrift.executable>/home/jitpack/build/thrift</thrift.executable>
+        <format.thrift.executable>/home/jitpack/build/thrift</format.thrift.executable>
+      </properties>
+    </profile>
+
   </profiles>
 </project>
