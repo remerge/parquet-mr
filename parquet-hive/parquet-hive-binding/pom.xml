@@ -16,7 +16,11 @@
   ~ specific language governing permissions and limitations
   ~ under the License.
   -->
-<project xmlns="http://maven.apache.org/POM/4.0.0" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xsi:schemaLocation="http://maven.apache.org/POM/4.0.0 http://maven.apache.org/xsd/maven-4.0.0.xsd">
+<project
+  xmlns="http://maven.apache.org/POM/4.0.0"
+  xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
+  xsi:schemaLocation="http://maven.apache.org/POM/4.0.0 http://maven.apache.org/xsd/maven-4.0.0.xsd"
+>
   <parent>
     <groupId>org.apache.parquet</groupId>
     <artifactId>parquet-hive</artifactId>
@@ -35,7 +39,7 @@
     <repository>
       <id>repository.cloudera.com</id>
       <name>repository.cloudera.com-releases</name>
-      <url>https://repository.cloudera.com/artifactory/datanucleus</url>
+      <url>https://repository.cloudera.com/repository/ext-release-local</url>
     </repository>
   </repositories>
 
