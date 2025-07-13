@@ -23,7 +23,7 @@ option java_package = "org.apache.parquet.proto.test";
 
 // For the test of schema evolution
 // This is the "V1" schema, the "V2" (its evolution) is in TestProto3SchemaV2.proto
-message MessageSchema {
+message MessageSchemaV1 {
 
     enum LabelNumberPair {
         UNKNOWN_VALUE = 0;
@@ -35,4 +35,3 @@ message MessageSchema {
     int32 optionalInt32 = 3;
 
 }
-
