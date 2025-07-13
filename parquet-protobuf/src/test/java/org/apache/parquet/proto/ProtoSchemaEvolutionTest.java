@@ -40,14 +40,14 @@ public class ProtoSchemaEvolutionTest {
    */
   @Test
   public void testEnumSchemaWriteV2ReadV1() throws IOException {
-    TestProto3SchemaV2.MessageSchemaV2 dataV2 = TestProto3SchemaV2.MessageSchemaV2.newBuilder()
-      .setOptionalLabelNumberPair(TestProto3SchemaV2.MessageSchemaV2.LabelNumberPair.SECOND)
+    TestProto3SchemaV2.MessageSchema dataV2 = TestProto3SchemaV2.MessageSchema.newBuilder()
+      .setOptionalLabelNumberPair(TestProto3SchemaV2.MessageSchema.LabelNumberPair.SECOND)
       .setOptionalString("string value")
       .build();
     Path file = writeMessages(dataV2);
-    List<TestProto3SchemaV1.MessageSchemaV1> messagesV1 = readMessages(
+    List<TestProto3SchemaV1.MessageSchema> messagesV1 = readMessages(
       file,
-      TestProto3SchemaV1.MessageSchemaV1.class
+      TestProto3SchemaV1.MessageSchema.class
     );
     assertEquals(messagesV1.size(), 1);
     assertEquals(messagesV1.get(0).getOptionalLabelNumberPairValue(), 2);
@@ -59,19 +59,19 @@ public class ProtoSchemaEvolutionTest {
    */
   @Test
   public void testEnumSchemaWriteV1ReadV2() throws IOException {
-    TestProto3SchemaV1.MessageSchemaV1 dataV1WithEnumValueFromV2 =
-      TestProto3SchemaV1.MessageSchemaV1.newBuilder()
+    TestProto3SchemaV1.MessageSchema dataV1WithEnumValueFromV2 =
+      TestProto3SchemaV1.MessageSchema.newBuilder()
         .setOptionalLabelNumberPairValue(2) // "2" is not defined in V1 enum, but the number is still accepted by protobuf
         .build();
     Path file = writeMessages(dataV1WithEnumValueFromV2);
-    List<TestProto3SchemaV2.MessageSchemaV2> messagesV2 = readMessages(
+    List<TestProto3SchemaV2.MessageSchema> messagesV2 = readMessages(
       file,
-      TestProto3SchemaV2.MessageSchemaV2.class
+      TestProto3SchemaV2.MessageSchema.class
     );
     assertEquals(messagesV2.size(), 1);
     assertSame(
       messagesV2.get(0).getOptionalLabelNumberPair(),
-      TestProto3SchemaV2.MessageSchemaV2.LabelNumberPair.SECOND
+      TestProto3SchemaV2.MessageSchema.LabelNumberPair.SECOND
     );
   }
 }

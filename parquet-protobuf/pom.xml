@@ -161,9 +161,26 @@
 
         <executions>
             <execution>
-            <goals>
-                <goal>generate-test</goal>
-            </goals>
+              <id>generate-test-1</id>
+              <goals>
+                  <goal>generate-test</goal>
+              </goals>
+              <configuration>
+                <excludes>
+                  <exclude>TestProto3SchemaV2.proto</exclude>
+                </excludes>
+              </configuration>
+            </execution>
+            <execution>
+              <id>generate-test-2</id>
+              <goals>
+                  <goal>generate-test</goal>
+              </goals>
+              <configuration>
+                <includes>
+                  <include>TestProto3SchemaV2.proto</include>
+                </includes>
+              </configuration>
             </execution>
         </executions>
       </plugin>
