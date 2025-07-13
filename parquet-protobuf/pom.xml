@@ -16,7 +16,11 @@
   ~ specific language governing permissions and limitations
   ~ under the License.
   -->
-<project xmlns="http://maven.apache.org/POM/4.0.0" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xsi:schemaLocation="http://maven.apache.org/POM/4.0.0 http://maven.apache.org/xsd/maven-4.0.0.xsd">
+<project
+  xmlns="http://maven.apache.org/POM/4.0.0"
+  xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
+  xsi:schemaLocation="http://maven.apache.org/POM/4.0.0 http://maven.apache.org/xsd/maven-4.0.0.xsd"
+>
   <parent>
     <groupId>org.apache.parquet</groupId>
     <artifactId>parquet</artifactId>
@@ -31,7 +35,7 @@
 
   <properties>
     <elephant-bird.version>4.4</elephant-bird.version>
-    <protobuf.version>3.5.1</protobuf.version>
+    <protobuf.version>4.31.1</protobuf.version>
   </properties>
 
 
@@ -143,30 +147,23 @@
         </executions>
       </plugin>
       <plugin>
-        <groupId>com.github.os72</groupId>
-        <artifactId>protoc-jar-maven-plugin</artifactId>
-        <version>3.8.0</version>
+        <groupId>io.github.ascopes</groupId>
+        <artifactId>protobuf-maven-plugin</artifactId>
+
+        <configuration>
+            <protocVersion>${protobuf.version}</protocVersion>
+            <outputDirectory
+          >${project.build.directory}/generated-test-sources/java</outputDirectory>
+        </configuration>
+
         <executions>
-          <execution>
-            <id>generate-sources</id>
-            <phase>generate-test-sources</phase>
+            <execution>
             <goals>
-              <goal>run</goal>
+                <goal>generate-test</goal>
             </goals>
-            <configuration>
-              <protocVersion>${protobuf.version}</protocVersion>
-              <addSources>test</addSources>
-              <addProtoSources>all</addProtoSources>
-              <outputDirectory>${project.build.directory}/generated-test-sources/java</outputDirectory>
-              <inputDirectories>
-                <include>src/test/resources</include>
-              </inputDirectories>
-            </configuration>
-          </execution>
+            </execution>
         </executions>
       </plugin>
-
     </plugins>
   </build>
-
 </project>

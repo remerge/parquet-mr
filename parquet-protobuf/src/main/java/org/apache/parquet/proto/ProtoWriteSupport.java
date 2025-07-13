@@ -550,7 +550,6 @@ public class ProtoWriteSupport<T extends MessageOrBuilder> extends WriteSupport<
   /** Returns message descriptor as JSON String*/
   private String serializeDescriptor(Class<? extends Message> protoClass) {
     Descriptor descriptor = Protobufs.getMessageDescriptor(protoClass);
-    DescriptorProtos.DescriptorProto asProto = descriptor.toProto();
-    return TextFormat.printToString(asProto);
+    return descriptor.toProto().toString();
   }
 }
