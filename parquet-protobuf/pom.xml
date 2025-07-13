@@ -154,6 +154,9 @@
             <protocVersion>${protobuf.version}</protocVersion>
             <outputDirectory
           >${project.build.directory}/generated-test-sources/java</outputDirectory>
+          <sourceDirectories>
+            <sourceDirectory>src/test/resources</sourceDirectory>
+          </sourceDirectories>
         </configuration>
 
         <executions>
