@@ -27,13 +27,12 @@ on:
 
 jobs:
   build:
-
     runs-on: ubuntu-latest
     strategy:
       fail-fast: false
       matrix:
-        java: [ '1.8', '11' ]
-        codes: [ 'uncompressed,brotli', 'gzip,snappy' ]
+        java: ["11"]
+        codes: ["uncompressed,brotli", "gzip,snappy"]
     name: Build Parquet with JDK ${{ matrix.java }} and ${{ matrix.codes }}
 
     steps:
