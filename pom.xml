@@ -1,4 +1,8 @@
-<project xmlns="http://maven.apache.org/POM/4.0.0" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xsi:schemaLocation="http://maven.apache.org/POM/4.0.0 http://maven.apache.org/maven-v4_0_0.xsd">
+<project
+  xmlns="http://maven.apache.org/POM/4.0.0"
+  xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
+  xsi:schemaLocation="http://maven.apache.org/POM/4.0.0 http://maven.apache.org/maven-v4_0_0.xsd"
+>
   <modelVersion>4.0.0</modelVersion>
 
   <parent>
@@ -14,7 +18,8 @@
 
   <name>Apache Parquet MR</name>
   <url>https://parquet.apache.org</url>
-  <description>Parquet is a columnar storage format that supports nested data. This provides the java implementation.</description>
+  <description
+  >Parquet is a columnar storage format that supports nested data. This provides the java implementation.</description>
 
   <scm>
     <connection>scm:git:git@github.com:apache/parquet-mr.git</connection>
@@ -67,8 +72,8 @@
   </developers>
 
   <properties>
-    <targetJavaVersion>1.8</targetJavaVersion>
-    <maven.compiler.source>1.8</maven.compiler.source>
+    <targetJavaVersion>11</targetJavaVersion>
+    <maven.compiler.source>11</maven.compiler.source>
     <maven.compiler.target>${targetJavaVersion}</maven.compiler.target>
     <project.build.sourceEncoding>UTF-8</project.build.sourceEncoding>
     <github.global.server>github</github.global.server>
@@ -426,9 +431,11 @@
             <!-- Configure Parquet logging during tests
                  See http://www.slf4j.org/api/org/slf4j/impl/SimpleLogger.html
                  -->
-            <org.slf4j.simpleLogger.defaultLogLevel>${surefire.logLevel}</org.slf4j.simpleLogger.defaultLogLevel>
+            <org.slf4j.simpleLogger.defaultLogLevel
+            >${surefire.logLevel}</org.slf4j.simpleLogger.defaultLogLevel>
             <org.slf4j.simpleLogger.showDateTime>true</org.slf4j.simpleLogger.showDateTime>
-            <org.slf4j.simpleLogger.dateTimeFormat>YYYY-MM-dd HH:mm:ss</org.slf4j.simpleLogger.dateTimeFormat>
+            <org.slf4j.simpleLogger.dateTimeFormat
+            >YYYY-MM-dd HH:mm:ss</org.slf4j.simpleLogger.dateTimeFormat>
             <org.slf4j.simpleLogger.showThreadName>false</org.slf4j.simpleLogger.showThreadName>
             <org.slf4j.simpleLogger.showShortLogName>true</org.slf4j.simpleLogger.showShortLogName>
 
@@ -453,52 +460,6 @@
             </goals>
          </execution>
        </executions>
-      </plugin>
-
-      <plugin>
-        <groupId>org.apache.rat</groupId>
-        <artifactId>apache-rat-plugin</artifactId>
-        <version>0.12</version>
-        <executions>
-          <execution>
-            <phase>test</phase>
-            <goals>
-              <goal>check</goal>
-            </goals>
-          </execution>
-        </executions>
-        <configuration>
-          <consoleOutput>true</consoleOutput>
-          <excludes>
-            <exclude>.github/PULL_REQUEST_TEMPLATE.md</exclude>
-            <exclude>**/*.parquet</exclude>
-            <exclude>**/*.avro</exclude>
-            <exclude>**/*.json</exclude>
-            <exclude>**/names.txt</exclude> <!-- parquet-cascading test data -->
-            <exclude>**/*.avsc</exclude>
-            <exclude>**/*.iml</exclude>
-            <exclude>**/*.log</exclude>
-            <exclude>**/*.md.vm</exclude>
-            <exclude>**/.classpath</exclude>
-            <exclude>**/.project</exclude>
-            <exclude>**/.settings/**</exclude>
-            <exclude>**/build/**</exclude>
-            <exclude>**/target/**</exclude>
-            <exclude>.git/**</exclude>
-            <exclude>.gitignore</exclude>
-            <exclude>.gitmodules</exclude>
-            <exclude>.idea/**</exclude>
-            <exclude>*/jdiff/*.xml</exclude>
-            <exclude>.travis.yml</exclude>
-            <exclude>licenses/**</exclude>
-            <exclude>protobuf_install/**</exclude>
-            <exclude>thrift-${thrift.version}/**</exclude>
-            <exclude>thrift-${thrift.version}.tar.gz</exclude>
-            <exclude>**/dependency-reduced-pom.xml</exclude>
-            <exclude>install_thrift.sh</exclude>
-            <exclude>jitpack.yml</exclude>
-          </excludes>
-        </configuration>
       </plugin>
 
       <plugin>

@@ -16,7 +16,11 @@
   ~ specific language governing permissions and limitations
   ~ under the License.
   -->
-<project xmlns="http://maven.apache.org/POM/4.0.0" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xsi:schemaLocation="http://maven.apache.org/POM/4.0.0 http://maven.apache.org/xsd/maven-4.0.0.xsd">
+<project
+  xmlns="http://maven.apache.org/POM/4.0.0"
+  xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
+  xsi:schemaLocation="http://maven.apache.org/POM/4.0.0 http://maven.apache.org/xsd/maven-4.0.0.xsd"
+>
   <parent>
     <groupId>org.apache.parquet</groupId>
     <artifactId>parquet</artifactId>
@@ -34,8 +38,8 @@
 
   <repositories>
     <repository>
-     <id>conjars.org</id>
-      <url>https://conjars.org/repo</url>
+      <id>conjars.org</id>
+      <url>https://conjars.wensel.net/repo/</url>
     </repository>
   </repositories>
 
@@ -80,7 +84,8 @@
     </dependency>
     <dependency>
        <groupId>cascading</groupId>
-       <artifactId>cascading-hadoop</artifactId> <!-- building against cascading-hadoop for Hadoop1, but will use against any backend -->
+       <artifactId
+      >cascading-hadoop</artifactId> <!-- building against cascading-hadoop for Hadoop1, but will use against any backend -->
        <version>${cascading3.version}</version>
        <scope>provided</scope>
     </dependency>

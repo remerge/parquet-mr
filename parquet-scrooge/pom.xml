@@ -16,7 +16,11 @@
   ~ specific language governing permissions and limitations
   ~ under the License.
   -->
-<project xmlns="http://maven.apache.org/POM/4.0.0" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xsi:schemaLocation="http://maven.apache.org/POM/4.0.0 http://maven.apache.org/xsd/maven-4.0.0.xsd">
+<project
+  xmlns="http://maven.apache.org/POM/4.0.0"
+  xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
+  xsi:schemaLocation="http://maven.apache.org/POM/4.0.0 http://maven.apache.org/xsd/maven-4.0.0.xsd"
+>
   <parent>
     <groupId>org.apache.parquet</groupId>
     <artifactId>parquet</artifactId>
@@ -34,8 +38,8 @@
 
   <repositories>
     <repository>
-     <id>conjars.org</id>
-      <url>https://conjars.org/repo</url>
+      <id>conjars.org</id>
+      <url>https://conjars.wensel.net/repo/</url>
     </repository>
   </repositories>
 
@@ -195,7 +199,8 @@
             <artifactId>scrooge-maven-plugin</artifactId>
             <version>${scrooge.verion}</version>
             <configuration>
-                <outputDirectory>${project.build.directory}/generated-test-sources/scrooge</outputDirectory>
+                <outputDirectory
+          >${project.build.directory}/generated-test-sources/scrooge</outputDirectory>
                 <thriftNamespaceMappings>
                     <thriftNamespaceMapping>
                         <from>org.apache.parquet.thrift.test</from>
